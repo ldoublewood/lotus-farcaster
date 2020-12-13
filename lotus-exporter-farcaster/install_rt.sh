@@ -1,0 +1,1 @@
+sudo cp lotus-exporter-farcaster.py /usr/local/bin && sudo chmod 777 /var/lib/node_exporter && sudo bash -c "cat lotus-exporter-farcaster.cron|sed 's/{{ LOTUS_USER }}/v/g'|sed 's/{{ NODE_EXPORTER_PATH }}/\/var\/lib\/node_exporter/g' > /etc/cron.d/lotus-exporter-farcaster"
