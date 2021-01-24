@@ -418,9 +418,12 @@ def main():
     workerjobs = miner_get_json("WorkerJobs", [])
     print("# HELP lotus_miner_worker_job status of each individual job running on the workers. Value is the duration")
     print("# TYPE lotus_miner_worker_job gauge")
+    maxsealingsector = 0
     for (wrk, job_list) in workerjobs["result"].items():
         for job in job_list:
             job_id = job['ID']['ID']
+            if job['Sector']['Number'] > maxsealingsector):
+                maxsealingsector = job['Sector']['Number']
             sector = str(job['Sector']['Number'])
 
             try:
@@ -452,12 +455,15 @@ def main():
     print("# TYPE lotus_miner_sector_event gauge")
     print("# HELP lotus_miner_sector_sealing_deals_info contains information related to deals that are not in Proving and Removed state.")
     print("# TYPE lotus_miner_sector_sealing_deals_info gauge")
-
+/*
     sector_list = miner_get_json("SectorsList", [])
     #sectors_counters = {}
     # remove duplicate (bug)
     unique_sector_list = set(sector_list["result"])
     for sector in unique_sector_list:
+*/
+    lookback = 500
+    for sector in range(maxsealingsector-lookback + 1, maxsealingsector + 1):
         detail = miner_get_json("SectorsStatus", [sector, False])
         deals = len(detail["result"]["Deals"])-detail["result"]["Deals"].count(0)
         creation_date = detail["result"]["Log"][0]["Timestamp"]
